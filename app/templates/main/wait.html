@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Wait
+{% endblock %}
+
+{% block page_content %}
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="d-none">
+    <symbol id="check-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </symbol>
+</svg>
+<div class="row w-100 text-center d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="col"></div>
+    <div class="col">
+        <div>
+            <div id="loader">
+                <div class="spinner-border my-3" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Building...</span>
+                </div>
+                <div class="my-3"><h2>Building...</h2></div>
+            </div>
+            <div id="complete" hidden>
+                <svg class="bi flex-shrink-0 my-3" style="width: 3rem; height: 3rem;" role="status" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+                <div class="my-3">
+                    <a class="btn btn-lg btn-outline-dark" href="{{ url_for('main.fill_params') }}">Fill another form</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col"></div>
+</div>
+{% endblock %}
+
+{% block add_scripts %}
+<script>
+    const check_url = {{ url_for('main.check_build')|tojson }}
+    console.log(check_url)
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    async function checkBuild() {
+        const response = await fetch(check_url);
+        const thread_status = await response.json();
+        return thread_status.is_alive
+    }
+    async function waiting() {
+        do {
+            var building = await checkBuild()
+            console.log(building)
+            await sleep(500)
+        } while (building)
+        document.getElementById("loader").hidden = true;
+        document.getElementById("complete").hidden = false;
+    }
+    waiting()
+</script>
+{% endblock %}

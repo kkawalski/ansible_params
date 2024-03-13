@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block page_content %}
+<div class="row w-100 text-center d-flex align-items-center justify-content-center"  style="height: 100vh;">
+    <div class="col">
+        <div class="w-100">
+            <a class="w-100 btn btn-lg btn-outline-dark" href="{{ url_for('main.fill_params') }}">Fill form</a>
+        </div>
+    </div>
+    <div class="col">
+        <div class="w-100">
+            <a class="w-100 btn btn-lg btn-outline-danger" href="{{ url_for('admin.home') }}">I am an admin</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

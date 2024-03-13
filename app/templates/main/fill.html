@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Fill
+{% endblock %}
+
+{% block page_content %}
+<div class="row m-5">
+    <div class="col"></div>
+    <div class="col-12">
+        <form action="" method="post">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-6">
+                            <div class="form-floating mb-3 w-100">
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="{{ filename.name }}" 
+                                    name="{{ filename.name }}" 
+                                    value="{{ filename.defaultValue }}" 
+                                    placeholder="{{ filename.name }}"
+                                    required
+                                >
+                                <label for="{{ filename.name }}">{{ filename.description }}</label>
+                            </div>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                </div>
+                {% for param in params %}
+                <div class="col-md-6 col-lg-3">
+                    <div class="form-floating mb-3 w-100">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="{{ param.name }}" 
+                            name="{{ param.name }}" 
+                            value="{{ param.defaultValue }}" 
+                            placeholder="{{param.defaultValue}}"
+                        >
+                        <label for="{{ param.name }}">{{ param.description }}</label>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col"><button type="submit" class="btn btn-dark btn-lg w-100">Submit</button></div>
+                <div class="col"></div>
+            </div>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+- name: Use Jenkins pipeline parameters in Ansible
+  hosts: app
+  tasks:
+    - name: Debug PARAM1 value
+      debug:
+        var: test
+
+    - name: Debug PARAM2 value
+      debug:
+        var: email

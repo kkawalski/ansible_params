@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Build
+{% endblock %}
+
+
+{% block page_content %}
+<div class="row w-100 text-center d-flex align-items-center justify-content-center"  style="height: 100vh;">
+    <div class="col"></div>
+    <div class="col-8">
+        <div class="row border-5 mb-3 border-bottom">
+            <div class="col">
+                <h1>You've changed {% if diff %}following params{% else %}nothing{% endif %}</h1>
+            </div>
+        </div>
+        {% for param_name, new_value, old_value in diff %}
+            <div class="row border-bottom mb-2">
+                <div class="col">
+                    {{ param_name }}
+                </div>
+                <div class="col">
+                    <strong>From:</strong> {{ old_value }}
+                </div>
+                <div class="col">
+                    <strong>To:</strong> {{ new_value }}
+                </div>
+            </div>
+        {% endfor %}
+        <div>
+            <form action="" method="POST">
+                <div class="row">
+                    <div class="col"><a class="btn btn-lg btn-outline-dark w-100" href="{{ url_for('main.fill_params') }}">Back to form</a></div>
+                    <div class="col"><button type="submit" class="btn btn-dark btn-lg w-100">Submit</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col"></div>
+</div>
+
+{% endblock %}
