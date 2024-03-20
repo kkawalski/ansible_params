@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admin menu
+{% endblock %}
+
+{% block back_link %}
+    {% from 'back_link.html' import back_link %}
+    {{ back_link(url_for('main.home'), 'home') }}
+{% endblock %}
+
+{% block page_content %}
+<div class="row w-100 h-100 text-center d-flex align-items-center justify-content-center">
+    <div class="col">
+        <div class="w-100">
+            <a class="w-100 btn btn-lg btn-outline-dark" href="{{ url_for('admin.form_list') }}">Show forms</a>
+        </div>
+    </div>
+    <div class="col">
+        <div class="w-100">
+            <!-- <a class="w-100 btn btn-lg btn-outline-dark" href="{{ url_for('admin.show_playbook') }}">Show ansible playbook</a> -->
+        </div>
+    </div>
+</div>
+{% endblock %}

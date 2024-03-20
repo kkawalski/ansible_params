@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}
+New form
+{% endblock %}
+
+{% block back_link %}
+    {% from 'back_link.html' import back_link %}
+    {{ back_link(url_for('admin.form_list'), 'form choice') }}
+{% endblock %}
+
+{% block page_content %}
+<div class="row" style="height: 10vh;"></div>
+<div class="row mb-5 d-flex justify-content-center align-items-center">
+    <div class="col">
+        <form id="param_form" action="" method="post">
+            <div class="row justify-content-center">
+                <div class="col w-100">
+                    <div class="form-floating mb-3 w-100">
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="form_id" 
+                            name="form_id"
+                            placeholder="form filename"
+                            value="{{ form_id }}"
+                            disabled
+                        >
+                        <label for="form_id">form filename</label>
+                    </div>
+                </div>
+            </div>
+            {% for param in params %}
+                <div id="row_{{ loop.index0 }}" class="row justify-content-center param">
+                    <div class="col">
+                        <div class="form-floating mb-3 w-100">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="name_{{ loop.index0 }}" 
+                                name="name_{{ loop.index0 }}" 
+                                value="{{ param.name }}" 
+                                placeholder="Field name"
+                                required
+                            >
+                            <label for="name_{{ loop.index0 }}">name</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating mb-3 w-100">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="description_{{ loop.index0 }}" 
+                                name="description_{{ loop.index0 }}" 
+                                value="{{ param.description }}" 
+                                placeholder="Field description"
+                                required
+                            >
+                            <label for="description_{{ loop.index0 }}">description</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-floating mb-3 w-100">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="default_value_{{ loop.index0 }}" 
+                                name="default_value_{{ loop.index0 }}" 
+                                value="{{ param.defaultValue }}" 
+                                placeholder="Field default value"
+                                required
+                            >
+                            <label for="default_value_{{ loop.index0 }}">default value</label>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        {% if loop.index0 != 0 %}
+                            <a type="button" class="btn btn-lg btn-outline-danger" onclick="delField({{ loop.index0 }})">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50%" height="50%" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            <div id="add_new_button" class="row mb-5">
+                <div class="col-6">
+                    <a type="button" class="btn btn-lg btn-outline-dark" onclick="addField()">
+                        Add field
+                    </a>
+                </div>
+                <div class="col-6">
+                    <button type="submit" class="btn btn-lg btn-outline-danger">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block add_scripts %}
+<script>
+    var rowId = document.getElementsByClassName("param").length;
+    var trash_svg = document.createElement("svg");
+        trash_svg.setAttribute("class", "icon");
+        trash_svg.setAttribute("fill", "currentColor");
+    var use_trash_svg = document.createElement("use");
+        use_trash_svg.setAttribute("xlink:href", "#trashIcon");
+    trash_svg.appendChild(use_trash_svg)
+    function addField() {
+        var new_row = document.createElement("div");
+        new_row.setAttribute("class", "row justify-content-center param")
+        new_row.setAttribute("id", `row_${rowId}`)
+
+        const input_names = ["name", "description", "default_value"];
+        input_names.forEach((input_name) => {
+            let new_col = document.createElement("div");
+            new_col.setAttribute("class", "col");
+
+            let new_floating_div = document.createElement("div");
+            new_floating_div.setAttribute("class", "form-floating mb-3 w-100");
+
+            let new_input = document.createElement("input")
+            let input_attributes = {
+                type: "text",
+                class: "form-control",
+                id: `${input_name}_${rowId}`,
+                name: `${input_name}_${rowId}`,
+                placeholder: `Field ${input_name.replace("_", " ")}`,
+                required: true,
+            };
+            for (key in input_attributes) {
+                new_input.setAttribute(key, input_attributes[key]);
+            };
+            if (input_name == "default_value") {
+                new_input.setAttribute("value", "-")
+            }
+
+            let new_label = document.createElement("label");
+            new_label.setAttribute("for", `${input_name}_${rowId}`)
+
+            let label_text = document.createTextNode(`${input_name.replace("_", " ")}`);
+
+            new_label.appendChild(label_text);
+            new_floating_div.append(new_input, new_label);
+            new_col.appendChild(new_floating_div);
+            new_row.appendChild(new_col);
+        });
+        var del_div = document.createElement("div")
+        del_div.setAttribute("class", "col-1")
+
+        var del_button = document.createElement("a");
+        del_button.setAttribute("type", "button");
+        del_button.setAttribute("onclick", `delField(${rowId})`);
+        del_button.setAttribute("class", "btn btn-lg btn-outline-danger w-100");
+        
+        del_button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="50%" height="50%" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+        </svg>
+        `
+
+        del_div.appendChild(del_button)
+        new_row.appendChild(del_div)
+
+        document.getElementById("param_form").insertBefore(new_row, document.getElementById("add_new_button"));
+        rowId++;
+    };
+    function delField(delRowId) {
+        document.getElementById("param_form").removeChild(document.getElementById(`row_${delRowId}`));
+    };
+</script>
+{% endblock %}

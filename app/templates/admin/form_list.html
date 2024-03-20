@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Choose
+{% endblock %}
+
+{% block back_link %}
+    {% from 'back_link.html' import back_link %}
+    {{ back_link(url_for('admin.home'), 'admin menu') }}
+{% endblock %}
+
+{% block page_content %}
+<div class="row w-100 text-center d-flex align-items-center justify-content-center h-100">
+    <div class="col w-100">
+        <div class="row mb-5">
+            <div class="col w-100">
+                <a type="button" href="{{ url_for('admin.new_form') }}" class="btn btn-lg btn-outline-dark">
+                    Add new form
+                </a>
+            </div>
+        </div>
+        <div class="row d-flex align-items-center justify-content-center">
+            {% for choice in param_forms %}
+                <div class="col-4 my-3">
+                    <div class="w-100">
+                        <a 
+                        class="w-100 btn btn-lg btn-outline-{{ loop.cycle('success', 'primary', 'danger', 'warning') }}" 
+                        href="{{ url_for('admin.change_form', form_id=choice[:-5]) }}"
+                        >
+                            Change form {{ choice }}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

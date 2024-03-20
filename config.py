@@ -9,7 +9,7 @@ class Config:
 
     ADMIN_USERNAME: str = os.getenv("ADMIN_USERNAME") or "admin"
     ADMIN_PASSWORD: str = os.getenv("ADMIN_PASSWORD") or "admin"
-    PARAMS_FILE: str = os.getenv("FORM_PARAMS_FILE") or os.path.join(basedir, "form_params.json")
+    PARAMS_DIR: str = os.getenv("FORM_PARAMS_DIR") or os.path.join(basedir, "form_params")
     ANSIBLE_PLAYBOOK_FILE: str = os.getenv("ANSIBLE_PLAYBOOK_FILE") or os.path.join(basedir, "ansible", "playbook.yml")
     ANSIBLE_PARAMS_FILE: str = os.getenv("ANSIBLE_PARAMS_FILE") or os.path.join(basedir, "ansible", "params.json")
     ANSIBLE_LOG_DIR: str = os.getenv("ANSIBLE_LOG_DIR") or os.path.join(basedir, "ansible", "logs")
@@ -19,8 +19,8 @@ class Config:
 
     @classmethod
     def init_app(cls, app: Flask) -> None:
-        if not os.path.exists(cls.PARAMS_FILE):
-            os.mknod(cls.PARAMS_FILE)
+        if not os.path.exists(cls.PARAMS_DIR):
+            os.mkdir(cls.PARAMS_DIR)
         if not os.path.exists(cls.ANSIBLE_LOG_DIR):
             os.mkdir(cls.ANSIBLE_LOG_DIR)
 

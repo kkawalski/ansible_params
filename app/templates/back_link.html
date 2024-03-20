@@ -1,0 +1,9 @@
+{% macro back_link(link, name) -%}
+    <div class="row" style="position: fixed; top:3rem">
+        <div class="col">
+            <div>
+                <a href="{{ link }}">Back to {{ name }}</a>
+            </div>
+        </div>
+    </div>
+{%- endmacro %}
