@@ -8,3 +8,4 @@
     - name: Debug PARAM2 value
       debug:
         var: email
+

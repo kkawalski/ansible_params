@@ -33,7 +33,7 @@ def allowed_params_file(filename):
 
 def get_params_filename(filename: str = None, form_id: str = None, create_new=False) -> str:
     if filename is not None:
-        filename = filename
+        filename = os.path.join(current_app.config.get("PARAMS_DIR"), filename)
     elif form_id:
         filename = os.path.join(current_app.config.get("PARAMS_DIR"), f"{form_id}.json")
     else:

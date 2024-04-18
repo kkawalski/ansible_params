@@ -21,7 +21,7 @@ Choose
         </div>
         <div class="row d-flex align-items-center justify-content-center">
             {% for choice in param_forms %}
-                <div class="col-4 my-3">
+                <div class="col-3 my-3">
                     <div class="w-100">
                         <a 
                         class="w-100 btn btn-lg btn-outline-{{ loop.cycle('success', 'primary', 'danger', 'warning') }}" 
@@ -31,9 +31,41 @@ Choose
                         </a>
                     </div>
                 </div>
+                <div class="col-1">
+                    <a type="button" class="btn btn-lg btn-outline-danger" onclick="delForm('{{ choice[:-5] }}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50%" height="50%" fill="currentColor" viewBox="0 0 16 16" class="bi bi-trash">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                        </svg>
+                    </a>
+                </div>
             {% endfor %}
         </div>
     </div>
     
 </div>
+{% endblock %}
+
+{% block add_scripts %}
+<script>
+    var delete_url = {{ url_for('admin.delete_form')|tojson }}
+    async function sendDeleteForm(formId) {
+        const response = await fetch(delete_url, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({"formId": formId}),
+        });
+        const delete_response = await response.json();
+        return delete_response.status === 'ok'
+    }
+    async function delForm(formId) {
+        let isDelete = confirm(`Are you sure? Delete ${formId}?`);
+        if (isDelete) {
+            await sendDeleteForm(formId);
+            location.reload();
+        }
+    }
+</script>
 {% endblock %}

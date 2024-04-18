@@ -89,6 +89,26 @@ New form
         </form>
     </div>
 </div>
+<div class="row mb-5 text-center d-flex justify-content-center align-items-center">
+    <div class="col-6">
+        <div>
+            <h1>Or upload new file form</h1>
+        </div>
+        <div>
+            <form action="{{ url_for('admin.upload_new_form') }}" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="formUploadFile" class="form-label">Choose file</label>
+                    <input class="form-control form-control-lg" id="formUploadFile" name="file" type="file">
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control form-control-lg" id="fileUploadFormId" name="form_id" type="text">
+                    <label for="fileUploadFormId">Enter new form name (optional)</label>
+                </div>
+                <button class="btn btn-outline-dark btn-lg" type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block add_scripts %}

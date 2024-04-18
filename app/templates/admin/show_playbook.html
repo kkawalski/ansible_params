@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Show playbook
+{% endblock %}
+
+
+{% block back_link %}
+    {% from 'back_link.html' import back_link %}
+    {{ back_link(url_for('admin.home'), 'home') }}
+{% endblock %}
+
+{% block page_content %}
+<div class="row w-100 h-100 text-center d-flex align-items-center justify-content-center">
+    <div class="col">
+        <div><h1>{{ filename }}</h1></div>
+        <div class="mb-3">
+            <textarea class="form-control" style="height: {{ line_count * 1.5 }}rem;" disabled>{{ file_content }}</textarea>
+        </div>
+        <div class="w-100">
+            <a class="btn btn-lg btn-outline-dark" href="{{ url_for('admin.download_playbook') }}">Download playbook</a>
+        </div>
+    </div>
+    <div class="col">
+        <div class="w-100">
+            <div>
+                <form action="{{ url_for('admin.upolad_new_playbook') }}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="formUploadFile" class="form-label">Upload playbook file</label>
+                        <input class="form-control form-control-lg" id="formUploadFile" name="file" type="file">
+                    </div>
+                    <button class="btn btn-outline-dark btn-lg" type="submit">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>    
+</div>
+
+{% endblock %}

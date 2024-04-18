@@ -3,6 +3,7 @@ import os
 from flask import (
     current_app,
     flash,
+    jsonify,
     make_response,
     redirect,
     render_template,
@@ -105,15 +106,16 @@ def upload_new_form():
 
     return redirect(url_for(".form_list"))
 
-@admin.route("/delete-form/<form_id>", methods=["POST"])
+@admin.route("/delete-form", methods=["POST"])
 @admin_only
-def delete_form(form_id):
-    form_file = get_params_filename(form_id)
+def delete_form():
+    form_id = request.json.get("formId")
+    form_file = get_params_filename(form_id=form_id)
     if os.path.exists(form_file):
         os.remove(form_file)
     else:
         current_app.logger.info(f"The file {form_file} does not exist") 
-    return redirect(url_for(".form_list"))
+    return jsonify({'status': 'ok'})
 
 
 @admin.route("/upload-new-playbook", methods=["GET", "POST"])
@@ -123,7 +125,7 @@ def upolad_new_playbook():
 
     file.save(current_app.config["ANSIBLE_PLAYBOOK_FILE"])
 
-    return redirect(url_for(".form_list"))
+    return redirect(url_for(".show_playbook"))
 
 @admin.route("/show-playbook", methods=["GET"])
 @admin_only
@@ -131,9 +133,11 @@ def show_playbook():
     filename = current_app.config["ANSIBLE_PLAYBOOK_FILE"]
     with open(current_app.config["ANSIBLE_PLAYBOOK_FILE"], "r") as playbook_file:
         content = playbook_file.read()
+    line_count = content.count("\n") + 1
     return render_template(
         "admin/show_playbook.html", 
         file_content=content, 
+        line_count=line_count,
         filename=filename.rsplit("/", 1)[-1]
     )
 
