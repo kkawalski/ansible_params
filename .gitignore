@@ -277,3 +277,5 @@ pyrightconfig.json
 
 form_params/*
 !form_params/default.json
+
+.idea

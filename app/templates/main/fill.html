@@ -33,21 +33,32 @@ Fill
                         </div>
                     </div>
                 </div>
-                {% for param in params %}
-                <div class="col-md-6 col-lg-3">
-                    <div class="form-floating mb-3 w-100">
-                        <input 
-                            type="text" 
-                            class="form-control" 
-                            id="{{ param.name }}" 
-                            name="{{ param.name }}" 
-                            value="{{ param.defaultValue }}" 
-                            placeholder="{{param.defaultValue}}"
-                        >
-                        <label for="{{ param.name }}">{{ param.description }}</label>
-                    </div>
+                <div class="col-12">
+                    {% for params_batch in params |  batch(4)  %}
+                        <div class="row justify-content-center params-row">
+                        {% for param in params_batch %}
+                            <div class="col-md-6 col-lg-3">
+                                <div class="form-floating mb-3 w-100">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="{{ param.name }}"
+                                        name="{{ param.name }}"
+                                        value="{{ param.defaultValue }}"
+                                        placeholder="{{param.defaultValue}}"
+                                    >
+                                    <label for="{{ param.name }}">{{ param.description }}</label>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <nav aria-label="...">
+                      <ul id="pagination" class="pagination pagination-lg">
+                      </ul>
+                    </nav>
                 </div>
-                {% endfor %}
+
             </div>
             <div class="row">
                 <div class="col"></div>
@@ -57,4 +68,58 @@ Fill
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block add_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const params = document.querySelectorAll('.params-row');
+    const itemsPerPage = 20; // Количество параметров на странице
+    let currentPage = 1;
+
+    const showPage = (pageNumber) => {
+        const startIndex = (pageNumber - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, params.length);
+
+        params.forEach((param, index) => {
+            if (index >= startIndex && index < endIndex) {
+                param.style.display = '';
+            } else {
+                param.style.display = 'none';
+            }
+        });
+    };
+
+    const setPageButtonActive = (pageButton) => {
+        let buttons = document.querySelectorAll(".page-item");
+        buttons.forEach((button, index) => {
+            button.className = "page-item page-link";
+        })
+        if (pageButton) {
+            pageButton.className = "page-item page-link active";
+        }
+    }
+
+    const totalPages = Math.ceil(params.length / itemsPerPage);
+
+    const paginationContainer = document.getElementById('pagination');
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('li');
+        pageButton.textContent = i;
+        pageButton.className = "page-item page-link"
+        if (i === 1) {
+            pageButton.className = "page-item page-link active"
+        }
+
+        pageButton.addEventListener('click', function() {
+            currentPage = i;
+            showPage(i);
+            setPageButtonActive(pageButton);
+        });
+        paginationContainer.appendChild(pageButton);
+    }
+
+    showPage(currentPage);
+});
+</script>
 {% endblock %}

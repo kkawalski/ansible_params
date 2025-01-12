@@ -32,6 +32,7 @@ def set_session_cookie(response: Response):
         current_app.logger.info(f"Set cookie session_id: {g.session_id}")
     return response
 
+
 @main.before_request
 def load_session():
     session_id = request.cookies.get("session_id", str(uuid.uuid4()))
@@ -56,10 +57,12 @@ def load_params():
 
     g.params = params
 
+
 @main.before_request
 def session_cache_before_request():
     session_cache = cache.get(g.session_id) if cache.has(g.session_id) else "empty"
     current_app.logger.info(f"Session cache before request {session_cache}")
+
 
 @main.after_request
 def session_cache_after_request(response):
@@ -82,6 +85,7 @@ def form_choice():
 @main.route("/fill-params", methods=["GET"])
 def fill_params_default():
     return redirect(url_for(".fill_params", form_id="default"))
+
 
 @main.route("/fill-params/<form_id>", methods=["GET", "POST"])
 def fill_params(form_id):
@@ -108,6 +112,7 @@ def fill_params(form_id):
         return redirect(url_for(".build"))
     
     return render_template("main/fill.html", filename=params[0], params=params[1:])
+
 
 @main.route("/build", methods=["GET", "POST"])
 def build():
@@ -143,6 +148,7 @@ def build():
     current_app.logger.info(f"Build old_params: {old_params}\nto new_params: {new_params}")
 
     return render_template("main/build.html", diff=diff, form_id=form_id)
+
 
 @main.route("/wait-for-build", methods=["GET", "POST"])
 def wait_for_build():
