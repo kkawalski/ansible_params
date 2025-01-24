@@ -74,11 +74,21 @@ Fill
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const params = document.querySelectorAll('.params-row');
-    const itemsPerPage = 20; // Количество параметров на странице
-    let currentPage = 1;
+    const defaultItemsPerPage = 20; // Количество параметров на странице
+    let currentPage = 0;
 
     const showPage = (pageNumber) => {
-        const startIndex = (pageNumber - 1) * itemsPerPage;
+        pageNumber++;
+        let itemsPerPage;
+        let offset;
+        if (pageNumber === 1) {
+            itemsPerPage = 25
+            offset = 0
+        } else {
+            itemsPerPage = defaultItemsPerPage
+            offset = 5
+        }
+        const startIndex = (pageNumber - 1) * itemsPerPage + offset;
         const endIndex = Math.min(startIndex + itemsPerPage, params.length);
 
         params.forEach((param, index) => {
@@ -100,14 +110,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    const totalPages = Math.ceil(params.length / itemsPerPage);
+    // const totalPages = Math.ceil(params.length / defaultItemsPerPage);
+    const totalPages = 4;
 
     const paginationContainer = document.getElementById('pagination');
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = 0; i < totalPages; i++) {
         const pageButton = document.createElement('li');
         pageButton.textContent = i;
         pageButton.className = "page-item page-link"
-        if (i === 1) {
+        if (i === 0) {
             pageButton.className = "page-item page-link active"
         }
 
